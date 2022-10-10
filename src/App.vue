@@ -3,13 +3,18 @@ import Comment from "./components/Comment.vue";
 
 import data from "./assets/data.json";
 import { IComment } from "./types";
+import CommentTree from "./components/CommentTree.vue";
 
 const comments = data.comments as IComment[];
 </script>
 
 <template>
   <div class="container">
-    <Comment v-for="comment in comments" :key="comment.id" :data="comment" />
+    <CommentTree
+      v-for="comment in comments"
+      :key="comment.id"
+      :root-comment="comment"
+    />
   </div>
 </template>
 

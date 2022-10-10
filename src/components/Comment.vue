@@ -36,6 +36,9 @@ defineProps<{
       </button>
     </div>
     <p class="content">
+      <span v-if="data.replyingTo" class="replying-to">
+        @{{ data.replyingTo }}
+      </span>
       {{ data.content }}
     </p>
   </div>
@@ -92,6 +95,11 @@ defineProps<{
   font-size: inherit;
   cursor: pointer;
   padding: 0.4rem;
+}
+
+.replying-to {
+  color: var(--moderate-blue);
+  font-weight: 500;
 }
 
 .content {
