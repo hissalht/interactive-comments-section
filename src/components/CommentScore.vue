@@ -45,7 +45,7 @@ defineProps<{
 
 .value {
   margin: 0;
-  background-color: var(--light-gray);
+  background-color: var(--very-light-gray);
   padding: 0.25rem 0;
   text-align: center;
 }
@@ -59,7 +59,7 @@ defineProps<{
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--light-gray);
+  background-color: var(--very-light-gray);
   width: 2.5rem;
   height: 2.5rem;
 }
