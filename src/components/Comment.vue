@@ -72,7 +72,7 @@ const totalScore = computed(
 
   display: grid;
   grid-template-columns: auto auto auto auto 1fr auto;
-  grid-template-rows: auto auto;
+  grid-template-rows: min-content 1fr;
   gap: 1rem;
   align-items: center;
 }
@@ -126,5 +126,6 @@ const totalScore = computed(
   color: var(--grayish-blue);
   grid-row: 2;
   grid-column: 2 / -1;
+  align-self: start;
 }
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import CommentTree from "./components/CommentTree.vue";
 import { useStore } from "./store";
+import CommentForm from "./components/CommentForm.vue";
 
 const store = useStore();
 </script>
@@ -12,6 +13,7 @@ const store = useStore();
       :key="comment.id"
       :root-comment="comment"
     />
+    <CommentForm />
   </div>
 </template>
 

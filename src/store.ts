@@ -9,6 +9,8 @@ interface StoreState {
   downvotes: IComment["id"][];
 }
 
+let nextId = 11;
+
 export const useStore = defineStore("main", {
   state: (): StoreState => {
     return {
@@ -34,6 +36,18 @@ export const useStore = defineStore("main", {
     resetVote(commentId: number) {
       this.downvotes = this.downvotes.filter((id) => id !== commentId);
       this.upvotes = this.upvotes.filter((id) => id !== commentId);
+    },
+    postComment(content: string) {
+      const id = nextId++;
+      this.comments.push({
+        id,
+        content,
+        createdAt: "Just Now",
+        replies: [],
+        user: this.currentUser,
+        score: 0,
+      });
+      this.upvotes.push(id);
     },
   },
 });
