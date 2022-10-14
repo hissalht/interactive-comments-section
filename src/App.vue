@@ -1,17 +1,14 @@
 <script lang="ts" setup>
-import Comment from "./components/Comment.vue";
-
-import data from "./assets/data.json";
-import { IComment } from "./types";
 import CommentTree from "./components/CommentTree.vue";
+import { useStore } from "./store";
 
-const comments = data.comments as IComment[];
+const store = useStore();
 </script>
 
 <template>
   <div class="container">
     <CommentTree
-      v-for="comment in comments"
+      v-for="comment in store.comments"
       :key="comment.id"
       :root-comment="comment"
     />

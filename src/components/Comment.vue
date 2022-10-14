@@ -1,15 +1,35 @@
 <script lang="ts" setup>
+import { propsToAttrMap } from "@vue/shared";
+import { computed } from "vue";
+import { useStore } from "../store";
 import { IComment } from "../types";
 import CommentScore from "./CommentScore.vue";
 
-defineProps<{
+const props = defineProps<{
   data: IComment;
 }>();
+
+const store = useStore();
+
+const isDownvoted = computed(() => store.downvotes.includes(props.data.id));
+const isUpvoted = computed(() => store.upvotes.includes(props.data.id));
+const totalScore = computed(
+  () =>
+    props.data.score + (isDownvoted.value ? -1 : 0) + (isUpvoted.value ? +1 : 0)
+);
 </script>
 
 <template>
   <div class="comment">
-    <CommentScore class="score" :score="data.score" />
+    <CommentScore
+      class="score"
+      :score="totalScore"
+      :upvoted="store.upvotes.includes(data.id)"
+      :downvoted="store.downvotes.includes(data.id)"
+      @downvote="store.downvote(data.id)"
+      @upvote="store.upvote(data.id)"
+      @reset="store.resetVote(data.id)"
+    />
     <img
       class="avatar"
       :src="data.user.image.png"
