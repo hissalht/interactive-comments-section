@@ -7,14 +7,14 @@ const store = useStore();
 </script>
 
 <template>
-  <div class="container">
+  <TransitionGroup tag="div" class="container" name="comment-list">
     <CommentTree
       v-for="comment in store.comments"
       :key="comment.id"
       :root-comment="comment"
     />
     <CommentForm />
-  </div>
+  </TransitionGroup>
 </template>
 
 <style scoped>
@@ -26,5 +26,16 @@ const store = useStore();
 
 .container > * + * {
   margin-top: 20px;
+}
+
+.comment-list-move,
+.comment-list-enter-active,
+.comment-list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.comment-list-enter-from {
+  scale: 0.8;
+  opacity: 0;
 }
 </style>

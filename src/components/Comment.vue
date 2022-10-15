@@ -37,7 +37,16 @@ const totalScore = computed(
       width="32"
       height="32"
     />
-    <p class="username">{{ data.user.username }}</p>
+    <p class="username">
+      {{ data.user.username }}
+      <span
+        v-if="store.currentUser.username === data.user.username"
+        class="current-user"
+      >
+        <span class="sr-only">This is</span>
+        you
+      </span>
+    </p>
     <p class="created-at">{{ data.createdAt }}</p>
     <div class="actions">
       <button class="reply-button">
@@ -96,6 +105,16 @@ const totalScore = computed(
 .username {
   font-weight: 500;
   color: var(--dark-blue);
+}
+
+.username .current-user {
+  background-color: var(--moderate-blue);
+  color: var(--white);
+  font-weight: 400;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  margin-left: 0.25rem;
+  border-radius: 2px;
 }
 
 .created-at {
