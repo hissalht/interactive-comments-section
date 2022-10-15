@@ -13,7 +13,7 @@ const store = useStore();
       :key="comment.id"
       :root-comment="comment"
     />
-    <CommentForm />
+    <CommentForm key="comment-form" @submit="store.postComment($event)" />
   </TransitionGroup>
 </template>
 
@@ -26,16 +26,5 @@ const store = useStore();
 
 .container > * + * {
   margin-top: 20px;
-}
-
-.comment-list-move,
-.comment-list-enter-active,
-.comment-list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.comment-list-enter-from {
-  scale: 0.8;
-  opacity: 0;
 }
 </style>

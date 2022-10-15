@@ -11,6 +11,15 @@ interface StoreState {
 
 let nextId = 11;
 
+const REPLYING_TO_REGEX = /^@(\w+) /;
+
+function parseComment(s: string): { content: string; replyingTo?: string } {
+  return {
+    content: s.replace(REPLYING_TO_REGEX, ""),
+    replyingTo: s.match(REPLYING_TO_REGEX)?.at(1),
+  };
+}
+
 export const useStore = defineStore("main", {
   state: (): StoreState => {
     return {
@@ -41,12 +50,26 @@ export const useStore = defineStore("main", {
       const id = nextId++;
       this.comments.push({
         id,
-        content,
+        ...parseComment(content),
         createdAt: "Just Now",
         replies: [],
         user: this.currentUser,
         score: 0,
       });
+      this.upvotes.push(id);
+    },
+    postReply(content: string, parentCommentId: number) {
+      const id = nextId++;
+      this.comments
+        .find((c) => c.id === parentCommentId)
+        ?.replies.push({
+          id,
+          ...parseComment(content),
+          createdAt: "Just Now",
+          replies: [],
+          user: this.currentUser,
+          score: 0,
+        });
       this.upvotes.push(id);
     },
   },

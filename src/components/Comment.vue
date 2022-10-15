@@ -9,6 +9,10 @@ const props = defineProps<{
   data: IComment;
 }>();
 
+defineEmits<{
+  (e: "reply"): void;
+}>();
+
 const store = useStore();
 
 const isDownvoted = computed(() => store.downvotes.includes(props.data.id));
@@ -49,7 +53,7 @@ const totalScore = computed(
     </p>
     <p class="created-at">{{ data.createdAt }}</p>
     <div class="actions">
-      <button class="reply-button">
+      <button class="reply-button" @click="$emit('reply')">
         <svg
           aria-hidden="true"
           width="14"

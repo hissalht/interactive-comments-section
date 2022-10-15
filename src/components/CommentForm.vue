@@ -3,20 +3,41 @@ let nextId = 1;
 </script>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "../store";
+
+const props = defineProps<{
+  replyingTo?: string;
+}>();
+
+const emit = defineEmits<{
+  (e: "submit", content: string): void;
+}>();
 
 const store = useStore();
 const uniqueId = nextId++;
 
-const contentValue = ref(
-  "Proident amet officia voluptate cillum sunt. Sint quis quis fugiat nostrud cupidatat anim ullamco eu aute magna voluptate tempor Lorem. Ullamco ullamco dolor nulla mollit incididunt. Velit sint elit labore sit enim ea reprehenderit exercitation nisi enim quis. Mollit tempor est Lorem labore laborum reprehenderit. Culpa dolore magna eu irure reprehenderit duis irure deserunt proident dolor mollit velit. Officia et amet quis nisi non."
-);
+const contentValue = ref("");
 
 function handleSubmit() {
-  store.postComment(contentValue.value);
+  emit("submit", contentValue.value);
   contentValue.value = "";
 }
+
+// update the mention tag at the start of the comment.
+// ex: "@some_user Blah blah blah..."
+watch(
+  () => props.replyingTo,
+  (replyingTo) => {
+    const regex = /^@\w+ /;
+    let newContent = contentValue.value.replace(regex, "");
+    if (replyingTo) {
+      newContent = `@${replyingTo} ${newContent}`;
+    }
+    contentValue.value = newContent;
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
