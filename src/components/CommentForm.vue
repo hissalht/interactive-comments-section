@@ -1,10 +1,7 @@
-<script lang="ts">
-let nextId = 1;
-</script>
-
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { useStore } from "../store";
+import { getUniqueId } from "../utils";
 
 const props = defineProps<{
   replyingTo?: string;
@@ -15,7 +12,7 @@ const emit = defineEmits<{
 }>();
 
 const store = useStore();
-const uniqueId = nextId++;
+const uniqueId = getUniqueId();
 
 const contentValue = ref("");
 

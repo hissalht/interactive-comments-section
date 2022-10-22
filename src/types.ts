@@ -9,12 +9,14 @@ export interface IUser {
 export enum CommentStatus {
   READY,
   SENDING,
+  UPDATING,
 }
 
 export interface IComment {
   id: number;
   content: string;
   createdAt: string;
+  updatedAt?: string;
   score: number;
   replyingTo?: string;
   user: IUser;

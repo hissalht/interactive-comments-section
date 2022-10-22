@@ -20,6 +20,20 @@ function parseComment(s: string): { content: string; replyingTo?: string } {
   };
 }
 
+function findComment(comments: IComment[], commentId: number) {
+  for (const comment of comments) {
+    if (comment.id === commentId) {
+      return comment;
+    }
+
+    for (const reply of comment.replies) {
+      if (reply.id === commentId) {
+        return reply;
+      }
+    }
+  }
+}
+
 export const useStore = defineStore("main", {
   state: (): StoreState => {
     return {
@@ -61,7 +75,7 @@ export const useStore = defineStore("main", {
       this.upvotes.push(id);
 
       setTimeout(() => {
-        this.comments.find((c) => c.id === id)!.status = CommentStatus.READY;
+        findComment(this.comments, id)!.status = CommentStatus.READY;
       }, 1000);
     },
     postReply(content: string, parentCommentId: number) {
@@ -78,6 +92,29 @@ export const useStore = defineStore("main", {
           status: CommentStatus.SENDING,
         });
       this.upvotes.push(id);
+
+      setTimeout(() => {
+        findComment(this.comments, id)!.status = CommentStatus.READY;
+      }, 1000);
+    },
+
+    updateComment(commentId: number, content: string) {
+      const comment = findComment(this.comments, commentId);
+
+      if (!comment) {
+        throw new Error(`Cannot find comment with id ${commentId}`);
+      }
+
+      const parsedContent = parseComment(content);
+      comment.content = parsedContent.content;
+      comment.replyingTo = parsedContent.replyingTo;
+      comment.updatedAt = new Date().toISOString();
+
+      comment.status = CommentStatus.UPDATING;
+
+      setTimeout(() => {
+        comment.status = CommentStatus.READY;
+      }, 1000);
     },
   },
 });

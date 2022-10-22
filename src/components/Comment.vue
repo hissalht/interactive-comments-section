@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "../store";
 import { CommentStatus, IComment } from "../types";
+import { getUniqueId } from "../utils";
 import CommentScore from "./CommentScore.vue";
 
 const props = defineProps<{
@@ -20,7 +21,19 @@ const totalScore = computed(
   () =>
     props.data.score + (isDownvoted.value ? -1 : 0) + (isUpvoted.value ? +1 : 0)
 );
-const isSending = computed(() => props.data.status === CommentStatus.SENDING);
+const isSending = computed(() => props.data.status !== CommentStatus.READY);
+const isCurrentUser = computed(
+  () => store.currentUser.username === props.data.user.username
+);
+
+const isUpdating = ref(false);
+const fieldId = `comment-input-${getUniqueId()}`;
+const contentValue = ref(props.data.content);
+
+function updateComment() {
+  store.updateComment(props.data.id, contentValue.value);
+  isUpdating.value = false;
+}
 </script>
 
 <template>
@@ -43,19 +56,41 @@ const isSending = computed(() => props.data.status === CommentStatus.SENDING);
     />
     <p class="username">
       {{ data.user.username }}
-      <span
-        v-if="store.currentUser.username === data.user.username"
-        class="current-user"
-      >
+      <span v-if="isCurrentUser" class="current-user">
         <span class="sr-only">This is</span>
         you
       </span>
     </p>
     <p class="created-at">
-      {{ isSending ? "Sending..." : data.createdAt }}
+      {{
+        {
+          [CommentStatus.READY]: data.createdAt + (data.updatedAt ? " *" : ""),
+          [CommentStatus.SENDING]: "Sending...",
+          [CommentStatus.UPDATING]: "Updating...",
+        }[data.status]
+      }}
     </p>
     <div class="actions">
-      <button class="reply-button" @click="$emit('reply')">
+      <button
+        v-if="isCurrentUser"
+        class="reply-button"
+        @click="isUpdating = true"
+      >
+        <svg
+          aria-hidden="true"
+          width="14"
+          height="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M13.479 2.872 11.08.474a1.75 1.75 0 0 0-2.327-.06L.879 8.287a1.75 1.75 0 0 0-.5 1.06l-.375 3.648a.875.875 0 0 0 .875.954h.078l3.65-.333c.399-.04.773-.216 1.058-.499l7.875-7.875a1.68 1.68 0 0 0-.061-2.371Zm-2.975 2.923L8.159 3.449 9.865 1.7l2.389 2.39-1.75 1.706Z"
+            fill="#5357B6"
+          />
+        </svg>
+        Edit
+      </button>
+
+      <button v-else class="reply-button" @click="$emit('reply')">
         <svg
           aria-hidden="true"
           width="14"
@@ -70,7 +105,25 @@ const isSending = computed(() => props.data.status === CommentStatus.SENDING);
         Reply
       </button>
     </div>
-    <p class="content">
+
+    <form
+      v-if="isUpdating"
+      class="content edit-content-form"
+      @submit.prevent="updateComment"
+    >
+      <label :for="fieldId" class="sr-only">Edit your comment</label>
+      <textarea
+        :id="fieldId"
+        class="content-field"
+        placeholder="Edit your comment"
+        required
+        v-model="contentValue"
+        rows="5"
+      />
+      <button class="submit-button" type="submit">Update</button>
+    </form>
+
+    <p v-else class="content">
       <span v-if="data.replyingTo" class="replying-to">
         @{{ data.replyingTo }}
       </span>
@@ -101,6 +154,7 @@ const isSending = computed(() => props.data.status === CommentStatus.SENDING);
 
 .score {
   grid-row: 1 / -1;
+  align-self: flex-start;
 }
 
 .avatar {
@@ -147,6 +201,9 @@ const isSending = computed(() => props.data.status === CommentStatus.SENDING);
   font-size: inherit;
   cursor: pointer;
   padding: 0.4rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
 }
 
 .replying-to {
@@ -159,5 +216,40 @@ const isSending = computed(() => props.data.status === CommentStatus.SENDING);
   grid-row: 2;
   grid-column: 2 / -1;
   align-self: start;
+}
+
+.edit-content-form {
+  display: grid;
+  grid-auto-flow: row;
+}
+
+.content-field {
+  border-radius: 8px;
+  border: 1px solid var(--light-gray);
+  padding: 0.75rem 1.25rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.content-field:hover {
+  border-color: var(--moderate-blue);
+}
+
+.submit-button {
+  background-color: var(--moderate-blue);
+  color: var(--white);
+  border: none;
+  text-transform: uppercase;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+
+  justify-self: flex-end;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background-color: var(--light-grayish-blue);
 }
 </style>
