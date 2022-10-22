@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useStore } from "../store";
 import { IComment } from "../types";
 import Comment from "./Comment.vue";
@@ -12,17 +12,29 @@ defineProps<{
 const store = useStore();
 const showReplyForm = ref(false);
 const replyingTo = ref<string>();
+
+const replyFormRef = ref<InstanceType<typeof CommentForm>>();
+
+async function onReply(replyComment: IComment) {
+  replyingTo.value = replyComment.user.username;
+  showReplyForm.value = true;
+
+  await nextTick();
+
+  (replyFormRef.value?.$el as HTMLFormElement).scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+
+  (replyFormRef.value?.$el as HTMLFormElement)
+    .querySelector("textarea")
+    ?.focus({ preventScroll: true });
+}
 </script>
 
 <template>
   <div class="comment-tree">
-    <Comment
-      :data="rootComment"
-      @reply="
-        replyingTo = rootComment.user.username;
-        showReplyForm = true;
-      "
-    />
+    <Comment :data="rootComment" @reply="onReply(rootComment)" />
     <TransitionGroup
       name="comment-list"
       tag="div"
@@ -34,10 +46,7 @@ const replyingTo = ref<string>();
         :key="replyComment.id"
         class="reply-comment"
         :data="replyComment"
-        @reply="
-          replyingTo = replyComment.user.username;
-          showReplyForm = true;
-        "
+        @reply="onReply(replyComment)"
       />
 
       <CommentForm
@@ -45,6 +54,7 @@ const replyingTo = ref<string>();
         class="reply-form"
         :replying-to="replyingTo"
         @submit="store.postReply($event, rootComment.id)"
+        ref="replyFormRef"
       />
     </TransitionGroup>
   </div>

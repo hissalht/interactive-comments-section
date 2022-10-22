@@ -26,7 +26,7 @@ function handleSubmit() {
 watch(
   () => props.replyingTo,
   (replyingTo) => {
-    const regex = /^@\w+ /;
+    const regex = /^@[\w\.]+ /;
     let newContent = contentValue.value.replace(regex, "");
     if (replyingTo) {
       newContent = `@${replyingTo} ${newContent}`;

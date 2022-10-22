@@ -9,7 +9,7 @@ interface StoreState {
   downvotes: IComment["id"][];
 }
 
-const REPLYING_TO_REGEX = /^@(\w+) /;
+const REPLYING_TO_REGEX = /^@([\w\.]+) /;
 
 function parseComment(s: string): { content: string; replyingTo?: string } {
   return {
