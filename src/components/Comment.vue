@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
+import { formatDistanceToNowStrict } from "date-fns";
+
 import { useStore } from "../store";
 import { CommentStatus, IComment } from "../types";
 import { getUniqueId } from "../utils";
@@ -56,6 +58,7 @@ const showConfirmationModal = ref(false);
       alt=""
       width="32"
       height="32"
+      loading="lazy"
     />
     <p class="username">
       {{ data.user.username }}
@@ -67,7 +70,9 @@ const showConfirmationModal = ref(false);
     <p class="created-at">
       {{
         {
-          [CommentStatus.READY]: data.createdAt + (data.updatedAt ? " *" : ""),
+          [CommentStatus.READY]:
+            formatDistanceToNowStrict(new Date(data.createdAt)) +
+            (data.updatedAt ? " *" : ""),
           [CommentStatus.SENDING]: "Sending...",
           [CommentStatus.UPDATING]: "Updating...",
           [CommentStatus.DELETING]: "Deleting...",

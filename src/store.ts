@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { CommentStatus, IComment, IUser } from "./types";
-import data from "./assets/data.json";
+import data from "./data";
 
 interface StoreState {
   currentUser: IUser;
@@ -8,8 +8,6 @@ interface StoreState {
   upvotes: IComment["id"][];
   downvotes: IComment["id"][];
 }
-
-let nextId = 11;
 
 const REPLYING_TO_REGEX = /^@(\w+) /;
 
@@ -20,7 +18,7 @@ function parseComment(s: string): { content: string; replyingTo?: string } {
   };
 }
 
-function findComment(comments: IComment[], commentId: number) {
+function findComment(comments: IComment[], commentId: string) {
   for (const comment of comments) {
     if (comment.id === commentId) {
       return comment;
@@ -44,28 +42,28 @@ export const useStore = defineStore("main", {
     };
   },
   actions: {
-    upvote(commentId: number) {
+    upvote(commentId: string) {
       if (!this.upvotes.includes(commentId)) {
         this.upvotes.push(commentId);
       }
       this.downvotes = this.downvotes.filter((id) => id !== commentId);
     },
-    downvote(commentId: number) {
+    downvote(commentId: string) {
       if (!this.downvotes.includes(commentId)) {
         this.downvotes.push(commentId);
       }
       this.upvotes = this.upvotes.filter((id) => id !== commentId);
     },
-    resetVote(commentId: number) {
+    resetVote(commentId: string) {
       this.downvotes = this.downvotes.filter((id) => id !== commentId);
       this.upvotes = this.upvotes.filter((id) => id !== commentId);
     },
     postComment(content: string) {
-      const id = nextId++;
+      const id = crypto.randomUUID();
       const newComment = {
         id,
         ...parseComment(content),
-        createdAt: "Just Now",
+        createdAt: new Date().toISOString(),
         replies: [],
         user: this.currentUser,
         score: 0,
@@ -78,14 +76,14 @@ export const useStore = defineStore("main", {
         findComment(this.comments, id)!.status = CommentStatus.READY;
       }, 1000);
     },
-    postReply(content: string, parentCommentId: number) {
-      const id = nextId++;
+    postReply(content: string, parentCommentId: string) {
+      const id = crypto.randomUUID();
       this.comments
         .find((c) => c.id === parentCommentId)
         ?.replies.push({
           id,
           ...parseComment(content),
-          createdAt: "Just Now",
+          createdAt: new Date().toISOString(),
           replies: [],
           user: this.currentUser,
           score: 0,
@@ -98,7 +96,7 @@ export const useStore = defineStore("main", {
       }, 1000);
     },
 
-    updateComment(commentId: number, content: string) {
+    updateComment(commentId: string, content: string) {
       const comment = findComment(this.comments, commentId);
 
       if (!comment) {
@@ -117,7 +115,7 @@ export const useStore = defineStore("main", {
       }, 1000);
     },
 
-    deleteComment(commentId: number) {
+    deleteComment(commentId: string) {
       const comment = findComment(this.comments, commentId);
 
       if (!comment) {

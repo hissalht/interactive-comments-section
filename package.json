@@ -9,7 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@fontsource/rubik": "^4.5.11",
+    "date-fns": "^2.29.3",
     "pinia": "^2.0.23",
     "vue": "^3.2.37"
   },

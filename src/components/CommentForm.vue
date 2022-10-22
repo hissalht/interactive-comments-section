@@ -77,6 +77,10 @@ watch(
   gap: 1rem;
 }
 
+.avatar {
+  border-radius: 50%;
+}
+
 .content-field {
   border-radius: 8px;
   border: 1px solid var(--light-gray);

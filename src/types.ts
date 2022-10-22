@@ -14,7 +14,7 @@ export enum CommentStatus {
 }
 
 export interface IComment {
-  id: number;
+  id: string;
   content: string;
   createdAt: string;
   updatedAt?: string;
