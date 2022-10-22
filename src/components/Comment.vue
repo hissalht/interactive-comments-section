@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { propsToAttrMap } from "@vue/shared";
 import { computed } from "vue";
 import { useStore } from "../store";
-import { IComment } from "../types";
+import { CommentStatus, IComment } from "../types";
 import CommentScore from "./CommentScore.vue";
 
 const props = defineProps<{
@@ -21,10 +20,11 @@ const totalScore = computed(
   () =>
     props.data.score + (isDownvoted.value ? -1 : 0) + (isUpvoted.value ? +1 : 0)
 );
+const isSending = computed(() => props.data.status === CommentStatus.SENDING);
 </script>
 
 <template>
-  <div class="comment">
+  <div class="comment" :class="{ sending: isSending }">
     <CommentScore
       class="score"
       :score="totalScore"
@@ -51,7 +51,9 @@ const totalScore = computed(
         you
       </span>
     </p>
-    <p class="created-at">{{ data.createdAt }}</p>
+    <p class="created-at">
+      {{ isSending ? "Sending..." : data.createdAt }}
+    </p>
     <div class="actions">
       <button class="reply-button" @click="$emit('reply')">
         <svg
@@ -88,6 +90,13 @@ const totalScore = computed(
   grid-template-rows: min-content 1fr;
   gap: 1rem;
   align-items: center;
+
+  transition: all 0.5s ease;
+}
+
+.comment.sending {
+  scale: 0.9;
+  opacity: 0.8;
 }
 
 .score {

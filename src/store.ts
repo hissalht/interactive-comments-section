@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { IComment, IUser } from "./types";
+import { CommentStatus, IComment, IUser } from "./types";
 import data from "./assets/data.json";
 
 interface StoreState {
@@ -48,15 +48,21 @@ export const useStore = defineStore("main", {
     },
     postComment(content: string) {
       const id = nextId++;
-      this.comments.push({
+      const newComment = {
         id,
         ...parseComment(content),
         createdAt: "Just Now",
         replies: [],
         user: this.currentUser,
         score: 0,
-      });
+        status: CommentStatus.SENDING,
+      };
+      this.comments.push(newComment);
       this.upvotes.push(id);
+
+      setTimeout(() => {
+        this.comments.find((c) => c.id === id)!.status = CommentStatus.READY;
+      }, 1000);
     },
     postReply(content: string, parentCommentId: number) {
       const id = nextId++;
@@ -69,6 +75,7 @@ export const useStore = defineStore("main", {
           replies: [],
           user: this.currentUser,
           score: 0,
+          status: CommentStatus.SENDING,
         });
       this.upvotes.push(id);
     },

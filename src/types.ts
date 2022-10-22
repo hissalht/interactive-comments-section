@@ -6,6 +6,11 @@ export interface IUser {
   };
 }
 
+export enum CommentStatus {
+  READY,
+  SENDING,
+}
+
 export interface IComment {
   id: number;
   content: string;
@@ -14,4 +19,5 @@ export interface IComment {
   replyingTo?: string;
   user: IUser;
   replies: IComment[];
+  status: CommentStatus;
 }
