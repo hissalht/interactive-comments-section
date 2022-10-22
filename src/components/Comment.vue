@@ -4,6 +4,7 @@ import { useStore } from "../store";
 import { CommentStatus, IComment } from "../types";
 import { getUniqueId } from "../utils";
 import CommentScore from "./CommentScore.vue";
+import DeleteModal from "./DeleteModal.vue";
 
 const props = defineProps<{
   data: IComment;
@@ -34,6 +35,8 @@ function updateComment() {
   store.updateComment(props.data.id, contentValue.value);
   isUpdating.value = false;
 }
+
+const showConfirmationModal = ref(false);
 </script>
 
 <template>
@@ -75,7 +78,7 @@ function updateComment() {
       <button
         v-if="isCurrentUser"
         class="delete-button"
-        @click="store.deleteComment(data.id)"
+        @click="showConfirmationModal = true"
       >
         <svg
           aria-hidden="true"
@@ -149,6 +152,15 @@ function updateComment() {
       </span>
       {{ data.content }}
     </p>
+
+    <DeleteModal
+      :show="showConfirmationModal"
+      @confirm="
+        showConfirmationModal = false;
+        store.deleteComment(data.id);
+      "
+      @cancel="showConfirmationModal = false"
+    />
   </div>
 </template>
 
