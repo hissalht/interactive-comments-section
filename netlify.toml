@@ -1,0 +1,26 @@
+[build]
+  base = "/"
+  publish = "dist/"
+  command = "yarn build"
+
+[build.environment]
+  NODE_VERSION = "16.13.1"
+  VITE_APP_SEED_FAKE_DATA = "true"
+
+[[plugins]]
+  # Installs the Lighthouse Build Plugin for all deploy contexts
+  package = "@netlify/plugin-lighthouse"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "functions/"
+
+[dev]
+  command = "yarn dev"
+  port = 5173
+  publish = "dist"
+
