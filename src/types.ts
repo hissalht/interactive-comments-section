@@ -10,6 +10,7 @@ export enum CommentStatus {
   READY,
   SENDING,
   UPDATING,
+  DELETING,
 }
 
 export interface IComment {

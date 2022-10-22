@@ -67,13 +67,33 @@ function updateComment() {
           [CommentStatus.READY]: data.createdAt + (data.updatedAt ? " *" : ""),
           [CommentStatus.SENDING]: "Sending...",
           [CommentStatus.UPDATING]: "Updating...",
+          [CommentStatus.DELETING]: "Deleting...",
         }[data.status]
       }}
     </p>
     <div class="actions">
       <button
         v-if="isCurrentUser"
-        class="reply-button"
+        class="delete-button"
+        @click="store.deleteComment(data.id)"
+      >
+        <svg
+          aria-hidden="true"
+          width="12"
+          height="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M1.167 12.448c0 .854.7 1.552 1.555 1.552h6.222c.856 0 1.556-.698 1.556-1.552V3.5H1.167v8.948Zm10.5-11.281H8.75L7.773 0h-3.88l-.976 1.167H0v1.166h11.667V1.167Z"
+            fill="#ED6368"
+          />
+        </svg>
+        Delete
+      </button>
+
+      <button
+        v-if="isCurrentUser"
+        class="edit-button"
         @click="isUpdating = true"
       >
         <svg
@@ -190,12 +210,15 @@ function updateComment() {
 
 .actions {
   grid-column: -2 / -1;
+  display: flex;
+  gap: 1rem;
 }
 
-.reply-button {
+.reply-button,
+.edit-button,
+.delete-button {
   border: none;
   background: none;
-  color: var(--moderate-blue);
   font-weight: 500;
   font-family: inherit;
   font-size: inherit;
@@ -204,6 +227,15 @@ function updateComment() {
   display: flex;
   gap: 0.5rem;
   align-items: baseline;
+}
+
+.edit-button,
+.reply-button {
+  color: var(--moderate-blue);
+}
+
+.delete-button {
+  color: var(--soft-red);
 }
 
 .replying-to {

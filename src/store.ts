@@ -116,5 +116,35 @@ export const useStore = defineStore("main", {
         comment.status = CommentStatus.READY;
       }, 1000);
     },
+
+    deleteComment(commentId: number) {
+      const comment = findComment(this.comments, commentId);
+
+      if (!comment) {
+        throw new Error(`Cannot find comment with id ${commentId}`);
+      }
+
+      comment.status = CommentStatus.DELETING;
+
+      setTimeout(() => {
+        const commentIndex = this.comments.findIndex((c) => c.id === commentId);
+
+        if (commentIndex !== -1) {
+          this.comments.splice(commentIndex, 1);
+          return;
+        }
+
+        for (const comment of this.comments) {
+          const commentIndex = comment.replies.findIndex(
+            (c) => c.id === commentId
+          );
+
+          if (commentIndex !== -1) {
+            comment.replies.splice(commentIndex, 1);
+            return;
+          }
+        }
+      }, 1000);
+    },
   },
 });
