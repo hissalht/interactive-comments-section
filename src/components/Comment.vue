@@ -277,6 +277,7 @@ const showConfirmationModal = ref(false);
   border: 1px solid var(--light-gray);
   padding: 0.75rem 1.25rem;
   font-family: inherit;
+  font-size: inherit;
   resize: vertical;
 }
 
