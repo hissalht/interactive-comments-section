@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# I want to keep the Cypress examples close without deleting them from my local repo :)
+cypress/e2e/1-getting-started
+cypress/e2e/2-advanced-examples
+cypress/fixtures/example.json

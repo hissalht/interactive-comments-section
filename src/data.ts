@@ -27,8 +27,10 @@ function generateComment(numberOfReplies: number): IComment {
 
 const comments: IComment[] = [];
 
-for (let i = 0; i < 5; i++) {
-  comments.push(generateComment(faker.datatype.number({ min: 0, max: 3 })));
+if (import.meta.env.VITE_APP_SEED_FAKE_DATA) {
+  for (let i = 0; i < 5; i++) {
+    comments.push(generateComment(faker.datatype.number({ min: 0, max: 3 })));
+  }
 }
 
 export default {
