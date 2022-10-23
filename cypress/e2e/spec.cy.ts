@@ -9,7 +9,7 @@ function getInputByLabel(label: string) {
 
 describe("Comments section", () => {
   it("User can create, edit and delete a comment", () => {
-    cy.visit("http://localhost:3000");
+    cy.visit("/");
 
     // Create the comment
     const comment =

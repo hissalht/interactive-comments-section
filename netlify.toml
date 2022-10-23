@@ -6,21 +6,17 @@
 [build.environment]
   NODE_VERSION = "16.13.1"
   VITE_APP_SEED_FAKE_DATA = "true"
+  CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
 
 [[plugins]]
-  # Installs the Lighthouse Build Plugin for all deploy contexts
   package = "@netlify/plugin-lighthouse"
+
+[[plugins]]
+  package = "netlify-plugin-cypress"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[functions]
-  directory = "functions/"
-
-[dev]
-  command = "yarn dev"
-  port = 5173
-  publish = "dist"
 
