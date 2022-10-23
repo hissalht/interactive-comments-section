@@ -1,5 +1,6 @@
 @import "@fontsource/rubik";
 @import "@fontsource/rubik/500.css";
+@import "@fontsource/rubik/variable.css";
 
 *,
 *::before,
@@ -20,6 +21,12 @@
   --light-gray: hsl(223, 19%, 93%);
   --very-light-gray: hsl(228, 33%, 97%);
   --white: hsl(0, 0%, 100%);
+}
+
+@supports (font-variation-settings: normal) {
+  :root {
+    font-family: "RubikVariable";
+  }
 }
 
 html {
