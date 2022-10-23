@@ -5,14 +5,6 @@
 
 [build.environment]
   NODE_VERSION = "16.13.1"
-  VITE_APP_SEED_FAKE_DATA = "true"
-  CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary"
-
-[[plugins]]
-  package = "@netlify/plugin-lighthouse"
-
-[[plugins]]
-  package = "netlify-plugin-cypress"
 
 [[redirects]]
   from = "/*"
