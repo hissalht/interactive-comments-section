@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { CommentStatus, IComment, IUser } from "./types";
-import data from "./data";
+import data from "./data.json";
 
 interface StoreState {
   currentUser: IUser;
