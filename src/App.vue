@@ -7,14 +7,17 @@ const store = useStore();
 </script>
 
 <template>
-  <TransitionGroup tag="div" class="container" name="comment-list">
-    <CommentTree
-      v-for="comment in store.comments"
-      :key="comment.id"
-      :root-comment="comment"
-    />
-    <CommentForm key="comment-form" @submit="store.postComment($event)" />
-  </TransitionGroup>
+  <main>
+    <h1>Interactive comment section</h1>
+    <TransitionGroup tag="div" class="container" name="comment-list">
+      <CommentTree
+        v-for="comment in store.comments"
+        :key="comment.id"
+        :root-comment="comment"
+      />
+      <CommentForm key="comment-form" @submit="store.postComment($event)" />
+    </TransitionGroup>
+  </main>
 </template>
 
 <style scoped>
