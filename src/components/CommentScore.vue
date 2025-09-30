@@ -20,6 +20,7 @@ defineEmits<{
       class="upvote-button"
       :class="{ active: upvoted }"
       @click="upvoted ? $emit('reset') : $emit('upvote')"
+      type="button"
     >
       <span class="sr-only">Upvote comment</span>
       <svg
@@ -42,6 +43,7 @@ defineEmits<{
       class="downvote-button"
       :class="{ active: downvoted }"
       @click="downvoted ? $emit('reset') : $emit('downvote')"
+      type="button"
     >
       <span class="sr-only">Downvote comment</span>
       <svg width="11" height="3" xmlns="http://www.w3.org/2000/svg">

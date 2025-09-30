@@ -25,7 +25,7 @@
 
 @supports (font-variation-settings: normal) {
   :root {
-    font-family: "Rubik Variable";
+    font-family: "Rubik Variable", sans-serif;
   }
 }
 
