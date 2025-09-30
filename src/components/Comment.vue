@@ -209,6 +209,7 @@ const showConfirmationModal = ref(false);
 .username {
   font-weight: 500;
   color: var(--dark-blue);
+  display: flex;
 }
 
 .username .current-user {
@@ -219,6 +220,7 @@ const showConfirmationModal = ref(false);
   padding: 0.2rem 0.4rem;
   margin-left: 0.25rem;
   border-radius: 2px;
+  white-space: nowrap;
 }
 
 .created-at {
